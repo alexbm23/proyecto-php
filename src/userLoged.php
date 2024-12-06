@@ -22,6 +22,15 @@ if (!$userLoged) {
 // Conexión a la base de datos
 $database = new Database();
 $dbConnection = $database->getConnection();
+/**
+ * Prueba si está inicializada la base de datos
+ * Código añadido por que me estaban dando fallos 
+ * al inicializar :( */
+
+ if (!$dbConnection || !$dbConnection instanceof mysqli) {
+    die('Error: Conexión a la base de datos no válida.');
+}
+
 
 // Manejo del botón de quitar de favoritos
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['removeFav'])) {
@@ -39,6 +48,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['removeFav'])) {
     }
     $stmt->close();
 }
+
+/**
+ * Prueba si está inicializada la base de datos
+ * Código añadido por que me estaban dando fallos 
+ * al inicializar :( */
+
+ if (!$dbConnection || !$dbConnection instanceof mysqli) {
+    die('Error: Conexión a la base de datos no válida.');
+}
+
 
 // Consulta para obtener los summoners vinculados al usuario logueado
 $stmt = $dbConnection->prepare("
@@ -68,7 +87,9 @@ $stmt->close();
 </head>
 <body>
     <h1>Summoners vinculados a <?= htmlspecialchars($userLoged) ?></h1>
-
+    <form action="main.php">
+                    <button type="submit">Volver a main</button>
+                </form>
     <?php if (!empty($summoners)): ?>
     <div class="summoners-container">
         <?php foreach ($summoners as $summoner): ?>
@@ -86,6 +107,7 @@ $stmt->close();
                     <input type="hidden" name="puuid" value="<?= htmlspecialchars($summoner->getPuuid()) ?>">
                     <button type="submit" name="removeFav" class="remove-fav-button">Quitar de favoritos</button>
                 </form>
+                
             </div>
         <?php endforeach; ?>
     </div>

@@ -2,6 +2,14 @@
 
 require_once "./clases/Summoner.php";
 
+
+/**
+ * Si $_GET no está vacío se comprueba si se ha inicializado
+ * $_GET['gameName`] y $_GET['tag`], si no hay datos
+ * se hace un exit y no se hace el require de sacarPuuid, en 
+ * caso de que vaya bien, se lanza eso y si se inicializa el
+ * objeto de clase Summoner se pintan los detalles del usuario
+ */
 if (!empty($_GET)) {
     $gameName = str_replace(" ", "%20", htmlspecialchars($_GET['gameName']));
     $tag = htmlspecialchars($_GET['tag']);

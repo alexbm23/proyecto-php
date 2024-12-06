@@ -3,29 +3,50 @@ require_once './lib/constants.php';
 require_once './clases/Database.php';
 require_once './clases/login.php';
 
+/**
+ * Si la sesión no se ha iniciado, se inicia
+ */
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+/**
+ * Si el usuario ya está logueado lo redirige a main.php
+ */
 if (isset($_SESSION['user'])) {
     header('Location: main.php');
     exit;
 }
 
-// Inicializa la base de datos y la clase Login
+/**
+ * Inicializa la base de datos y el Login
+ */
 $database = new Database();
 $dbConnection = $database->getConnection();
 $login = new Login($dbConnection);
 
-$message = ''; // Mensaje para el estado del login
+$message = ''; 
 
-// Mensaje de éxito de registro
+
 $success_message = '';
+
+/**
+ * Si $_SESSION['registration_succes'] existe le da el valor
+ * de registro exitoso, proveniente de register.php
+ */
 if (isset($_SESSION['registration_success'])) {
     $success_message = $_SESSION['registration_success'];
     unset($_SESSION['registration_success']);
 }
 
+/**
+ *  Si $_POST['usuario'] y $_POST['contraseña'] existen
+ * se les da el valor a $username y $password.
+ * Con el objeto de la clase Login se llama a la función login()
+ * que devuelve true si el login es exitoso, si es exitoso la 
+ * superglobal $_SESSION['user'] obtiene el valor de $username
+ * y redirige la página a main.php
+ */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['usuario'] ?? '';
     $password = $_POST['contraseña'] ?? '';

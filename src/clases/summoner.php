@@ -202,6 +202,13 @@ class summoner
       }
    }
 
+   /**
+    * Esta función recorre todo el array de la propiedad historial
+    * y utiliza la función pintarcard() de la clase game para pintar todas
+    * las partidas
+    *
+    * @return void
+    */
    public function pintarHistorial()
    {
 
@@ -345,6 +352,14 @@ class summoner
       return $respuesta;
    }
 
+   /**
+    * Esta función transforma el rango y saca el 
+    * primer segmento de la propiedad rango
+    * para facilitar la búsqueda de la imagen del rango
+    *
+    * @param [type] $rango
+    * @return void
+    */
    public function transformarRango($rango)
    {
 
@@ -356,7 +371,11 @@ class summoner
 
    /**
     * Esta función muestra por pantalla la información principal del summoner en forma de card
-    *
+    * También verifica si el usuario está en favoritos de
+    * la cuenta logueada, hace una petición a la base de datos
+    * , a la tabla summoner y si existe esa cuenta y el userId
+    * pertenece al usuario logueado la variable isFavourite se pone en
+    * True. A través de esta variable se controla si es o no favorita
     * @return void
     */
     public function pintarCard($dbConnection)
@@ -382,8 +401,13 @@ class summoner
 
         echo '
         <div class="Summoner-Container">
-            <form method="POST" action="">
-                <button class="' . $buttonClass . '" type="submit" name="toggleFav">' . $buttonText . '</button>
+            <form method="POST" action="">';
+
+            if ($_SERVER['REQUEST_URI'] == "main.php")  {
+               echo' <button class="' . $buttonClass . '" type="submit" name="toggleFav">' . $buttonText . '</button>';
+           } 
+            echo '
+               
                 <input type="hidden" name="puuid" value="' . $puuid . '">
                 <input type="hidden" name="username" value="' . $this->getGameName() . '">
                 <input type="hidden" name="tag" value="' . $this->getTag() . '">

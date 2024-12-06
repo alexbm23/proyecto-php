@@ -1,6 +1,8 @@
 <?
 
-// INICIALIZA LA CLASE VERSIÓN
+/**
+ * Inicializa la clase versión
+ */
 
 $version = new version();
 

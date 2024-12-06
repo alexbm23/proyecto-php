@@ -6,13 +6,40 @@
         public string $iconoRol;
 
 
-
+    
+        /**
+         * Constructor de la clase game
+         * Al llamar al constructor se lanzan los métodos
+         * transformarRol(), transformarMapa() y setIconoRol()
+         * además de inicializar todas las propiedades
+         *
+         * @param string $id
+         * @param string $campeonJugado
+         * @param string $rolJugado
+         * @param string $duracion
+         * @param string $mapa
+         * @param string $cola
+         * @param string $resultado
+         * @param string $kills
+         * @param string $deaths
+         * @param string $assists
+         * @param string $visionScore
+         * @param string $damageDealt
+         * @param string $cs
+         * @param string $championEnemigo
+         * @param string $fecha
+         */
     public function __construct(public string $id, public string $campeonJugado, public string $rolJugado, public string $duracion, public string $mapa, public string $cola, public string $resultado, public string $kills, public string $deaths, public string $assists, public string $visionScore, public string $damageDealt, public string $cs, public string $championEnemigo, public string $fecha)
     {
         $this->transformarRol();
         $this->transformarMapa();
         $this->setIconoRol();
     }
+
+
+    /**
+     * SETTERS Y GUETTERS
+     */
 
     public function getCampeonJugado(){
         return $this->campeonJugado;
@@ -73,6 +100,16 @@
     public function getDamageDealt(){
         return $this->damageDealt;
     }
+    public function getCola(){
+        return $this->cola;
+    }
+
+
+    /**
+     * Esta función "traduce" el rol para facilitar el funcionamiento
+     * de la página ya que al pintar las fotos de los roles, se necesitan
+     * esos nombres 
+     */
 
     public function transformarRol(){
         if ($this->rolJugado == "UTILITY") {
@@ -86,12 +123,23 @@
         }
     }
 
+    /**
+     * Esta función le da el nombre al mapa CLASSIC, que
+     * en realidad es Grieta del Invocador
+     * 
+     */
     public function transformarMapa(){
         if($this->mapa == "CLASSIC"){
             $this->setMapa("Grieta del Invocador");
         }
     }
 
+    /**
+     * Esta función inicializa la propiedad iconoRol
+     * que contendrá la url de la imagen del rol jugado
+     *
+     * @return void
+     */
     public function setIconoRol(){
 
         $url = "https://s-lol-web.op.gg/images/icon/icon-position-{$this->getRolJugado()}.svg?v=1729058249";
@@ -101,16 +149,26 @@
 
     }
 
-    public function getCola(){
-        return $this->cola;
-    }
 
+    /**
+     * Funcion __tostring de la clase game
+     *
+     * @return string
+     */
     public function __toString()
     {
         return "<br> <br>Nueva Partida: <br> Campeón: {$this->campeonJugado} <br> Rol: {$this->rolJugado} <br> Duración: {$this->duracion} <br> Mapa: {$this->mapa} <br> Cola: {$this->cola}<br> Resultado: {$this->resultado} <br> KDA: {$this->kills}/{$this->deaths}/{$this->assists} <br> Daño a campeones: {$this->damageDealt} <br> Minions asesinados: {$this->cs} <br> Puntuación de visión: {$this->visionScore} <br> VS: {$this->championEnemigo} <br> Fecha: {$this->fecha} <br>";
     }
 
-
+    /**
+     * Esta función pinta la card de cada partida, 
+     * el primer if facilita la extracción de la foto
+     * del campeón wukong, ya que en la API le dan el nombre MonkeyKing
+     * 
+     * 
+     *
+     * @return void
+     */
     public function pintarCard(){
 
         $champion = $this->getCampeonJugado();

@@ -5,6 +5,8 @@ require_once "./clases/Summoner.php";
 /**
  * HACE EL PRIMER FETCH, COMPRUEBA SI EXISTE EL SUMMONER, SI EXISTE
  * INICIALIZA UN OBJETO DE CLASE SUMMONER, SI NO DEVUELVE "CUENTA NO ENCONTRADA"
+ * Hace 3 retries ya que hay veces que riot no deja hacer peticiones
+ * ya que hay un máximo de peticiones por tiempo
  */
 $urlAcc = "https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{$gameName}/{$tag}?api_key=" . TOKEN;
 
@@ -25,14 +27,14 @@ do {
 } while ($retry < $maxRetries);
 
 if ($response === false) {
-    // Después de los reintentos, si no hay respuesta válida, registrar error
+   
     error_log("Error: No se pudo obtener una respuesta válida de la API tras $maxRetries intentos.");
     $summoner = null;
 } else {
-    // Decodificamos la respuesta JSON
+    
     $data = json_decode($response, true);
 
-    // Validamos si la respuesta contiene el campo 'puuid'
+    
     if (isset($data['puuid'])) {
         $summoner = new Summoner($data["puuid"], $data["gameName"], $data["tagLine"]);
     } else {

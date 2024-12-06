@@ -1,6 +1,12 @@
 <?php
 
+require_once './clases/Database.php';
 
+/**
+ * Esta clase se utiliza para controlar la versión de la tabla
+ * champions de mi base de datos, si esta no está a la misma
+ * vesión que la última del juego, se actualiza
+ */
 
 class version
 {
@@ -11,7 +17,8 @@ class version
     public $tablaVacia;
 
 
-    public function inicializarVersion(){
+    public function inicializarVersion()
+    {
         $this->setVersionBBDD();
         $this->setUltimaVersion();
         $this->comprobarVersionBBDD();
@@ -30,13 +37,12 @@ class version
     public function setVersionBBDD()
     {
         // SACAR VERSIÓN DEL JUEGO DESDE LA BASE DE DATOS
-  
-        $conn = new mysqli(
-            SERVERNAME,
-            USERNAME,
-            PASSWORD,
-            DBNAME
-        );
+
+        $database = new Database();
+        $conn = $database->getConnection();
+        if (!$conn || !$conn instanceof mysqli) {
+            die('Error: Conexión a la base de datos no válida.');
+        }
 
 
         if ($conn->connect_error) {
@@ -48,7 +54,6 @@ class version
         $result = $conn->query($sql);
         $row = $result->fetch_assoc();
         $this->versionBBDD = $row["version"];
-        
     }
 
     /**
@@ -77,29 +82,26 @@ class version
     {
 
         if ($this->ultimaVersion != $this->versionBBDD) {
-            
-        
+
+
             $sql = "UPDATE api_version SET version = ?, last_update = NOW() WHERE id = 1";
 
 
 
-            $conn = new mysqli(SERVERNAME, USERNAME, PASSWORD, DBNAME);
-            // Preparar el statement
+            $database = new Database();
+            $conn = $database->getConnection();
+            if (!$conn || !$conn instanceof mysqli) {
+                die('Error: Conexión a la base de datos no válida.');
+            }            // Preparar el statement
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("s", $this->ultimaVersion);
 
             // Ejecutar el statement
             if ($stmt->execute()) {
-                echo "Registro actualizado correctamente.";
+
                 $this->actualizarTablaChampions();
                 $this->setVersionBBDD();
-            } else {
-                echo "Error al actualizar el registro: " . $stmt->error;
             }
-
-            $stmt->close();
-
-            $conn->close();
         }
     }
 
@@ -118,13 +120,11 @@ class version
     public function comprobarChampionsTable()
     {
 
-        $conn = new mysqli(
-            SERVERNAME,
-            USERNAME,
-            PASSWORD,
-            DBNAME
-        );
-
+        $database = new Database();
+        $conn = $database->getConnection();
+        if (!$conn || !$conn instanceof mysqli) {
+            die('Error: Conexión a la base de datos no válida.');
+        }
         // Preparar la consulta
         $sql = "SELECT EXISTS (SELECT 1 FROM champions)";
         $result = $conn->query($sql);
@@ -145,15 +145,12 @@ class version
      */
     public function actualizarTablaChampions()
     {
-        // Conexión a la base de datos (reemplaza con tus credenciales)
 
-        $conn = new mysqli(
-            SERVERNAME,
-            USERNAME,
-            PASSWORD,
-            DBNAME
-        );
-
+        $database = new Database();
+        $conn = $database->getConnection();
+        if (!$conn || !$conn instanceof mysqli) {
+            die('Error: Conexión a la base de datos no válida.');
+        }
 
         // Comprobar conexión
         if ($conn->connect_error) {
@@ -181,8 +178,5 @@ class version
             $stmt->bind_param("ss", $id, $key);
             $stmt->execute();
         }
-
-        $stmt->close();
-        $conn->close();
     }
 }

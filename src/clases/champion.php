@@ -87,7 +87,12 @@
             $conn->close();
         }
 
-
+        /**
+         * Esta función devuelve la url para la foto
+         * de loading de cada campeón
+         *
+         * @return void
+         */
         public function setFotoLoading(){
 
             $url = "https://ddragon.leagueoflegends.com/cdn/img/champion/loading/{$this->getNombre()}_0.jpg";
@@ -96,6 +101,13 @@
 
 
         }
+
+        /**
+         * Esta función devuelve un echo con la imagen de loading
+         * del campeon
+         *
+         * @return void
+         */
         public function pintarFotoLoading(){
 
             $foto = '<img src="' . $this->getFotoLoading() . '"> </img>';
